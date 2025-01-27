@@ -17,9 +17,19 @@ function main(workbook: ExcelScript.Workbook) {
 		}
 
 		const destinationSheet = workbook.getWorksheet(clientName);
-		const destinationRowIndex = destinationSheet.getTable(clientName).getRowCount()+2;
-		destinationSheet.getRange(`B${destinationRowIndex}`).copyFrom(selectedSheet.getRange(`B${sourceRowIndex}:I${sourceRowIndex}`), ExcelScript.RangeCopyType.values, false, false);
-		destinationSheet.getRange(`A${destinationRowIndex}`).setValue(employeeName);
+		if(destinationSheet === undefined) {
+			const defaultDestination = workbook.getWorksheet("FV Firmy bez umowy");
+			const destinationRowIndex = defaultDestination.getTable("BezUmowy").getRowCount()+2;
+			defaultDestination.getRange(`C${destinationRowIndex}`).copyFrom(selectedSheet.getRange(`B${sourceRowIndex}:I${sourceRowIndex}`), ExcelScript.RangeCopyType.values, false, false);
+			defaultDestination.getRange(`A${destinationRowIndex}`).setValue(clientName);
+			defaultDestination.getRange(`B${destinationRowIndex}`).setValue(employeeName);
+		}
+		else {
+			const destinationRowIndex = destinationSheet.getTable(clientName).getRowCount()+2;
+			destinationSheet.getRange(`B${destinationRowIndex}`).copyFrom(selectedSheet.getRange(`B${sourceRowIndex}:I${sourceRowIndex}`), ExcelScript.RangeCopyType.values, false, false);
+			destinationSheet.getRange(`A${destinationRowIndex}`).setValue(employeeName);
+		}
+		
 
 
 	}
